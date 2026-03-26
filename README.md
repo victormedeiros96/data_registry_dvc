@@ -41,4 +41,3 @@ uv run streamlit run dashboard.py
 ```
 
 ---
-*Mestrado Unipampa / Nova Rota do Oeste*
