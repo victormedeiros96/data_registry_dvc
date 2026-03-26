@@ -1,0 +1,10 @@
+[project]
+name = "rota-data-registry"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dvc[ssh]>=3.67.0",
+    "typer>=0.24.1",
+]
