@@ -30,9 +30,31 @@ uv sync
 # 4. Inicializar DVC (se necessário)
 if [ ! -d ".dvc" ]; then
     echo "🗄️  Inicializando DVC no repositório local..."
-    uv run dvc init --no-scm || echo "⚠️  DVC já inicializado ou requer permissão."
+    uv run dvc init --no-scm || echo "⚠️  DVC já inicializado."
 fi
 
+# 5. Configuração do Backend SSH do DVC
+echo ""
+read -p "❓ Deseja configurar o Storage SSH do DVC agora? (y/n): " configure_ssh
+if [[ "$configure_ssh" =~ ^[Yy]$ ]]; then
+    read -p "👤 Usuário SSH (ex: victor): " ssh_user
+    read -p "🌐 Endereço/IP do Servidor: " ssh_ip
+    read -p "📂 Pasta Remota no Servidor (ex: /mnt/storage): " ssh_path
+    
+    remote_url="ssh://$ssh_user@$ssh_ip:$ssh_path"
+    remote_name="storage-central"
+    
+    echo "🔧 Configurando DVC Remote em: $remote_url"
+    uv run dvc remote add -d $remote_name "$remote_url" --force
+    
+    echo "⚡ Ativando otimizações de filesystem (reflink/hardlink)..."
+    uv run dvc config cache.type reflink,hardlink
+    uv run dvc config cache.protected true
+    
+    echo "✅ Remote SSH configurado!"
+fi
+
+echo ""
 echo "--- ✨ Setup Concluído com Sucesso! ---"
 echo "Para começar a usar, você pode:"
 echo "1. Ativar o ambiente: source .venv/bin/activate"
