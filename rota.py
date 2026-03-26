@@ -44,10 +44,10 @@ console = Console()
 def ingest(
     source: Path = typer.Argument(..., help="Pasta original do dataset"),
     name: str = typer.Argument(..., help="Nome base do projeto/dataset"),
-    projeto: str = typer.Option(config_data.get("projeto", "Nova Rota / ANTT"), help="Nome do projeto associado"),
-    engenheiro: str = typer.Option(config_data.get("engenheiro", os.getlogin()), help="Nome do engenheiro responsável"),
-    hardware: str = typer.Option(config_data.get("hardware_ingest", "ThinkStation-PX-A6000"), help="Hardware utilizado na ingestão"),
-    metodo_storage: str = typer.Option(config_data.get("metodo_storage", "DVC-SSH-MergerFS"), help="Método de armazenamento"),
+    projeto: Optional[str] = typer.Option(None, help="Nome do projeto associado"),
+    engenheiro: Optional[str] = typer.Option(None, help="Nome do engenheiro responsável"),
+    hardware: Optional[str] = typer.Option(None, help="Hardware utilizado na ingestão"),
+    metodo_storage: Optional[str] = typer.Option(None, help="Método de armazenamento"),
     delete: bool = typer.Option(False, "--delete", help="Apaga a origem após o sucesso")
 ):
     """Indexa dados com timestamp, sobe para o SSH e registra no Git."""
@@ -56,12 +56,34 @@ def ingest(
         typer.secho(f"❌ Erro: {source} não é um diretório.", fg="red")
         raise typer.Exit()
 
+    typer.secho("📝 Configure os metadados do Dataset (Pressione Enter para usar o Padrão/Config):", fg="cyan")
+    
+    # Interação via Questionary
+    projeto = projeto or questionary.text("Projeto:", default=config_data.get("projeto", "Nova Rota")).ask()
+    engenheiro = engenheiro or questionary.text("Engenheiro responsável:", default=config_data.get("engenheiro", os.getlogin())).ask()
+    hardware = hardware or questionary.text("Hardware de Ingestão:", default=config_data.get("hardware_ingest", "Computador-Local")).ask()
+    
+    storage_choices = ["DVC-SSH-MergerFS", "DVC-Local", "DVC-S3", "DVC-GCloud"]
+    default_storage = config_data.get("metodo_storage", "DVC-SSH-MergerFS")
+    if default_storage not in storage_choices:
+        storage_choices.insert(0, default_storage)
+        
+    metodo_storage = metodo_storage or questionary.select(
+        "Método de Armazenamento:",
+        choices=storage_choices,
+        default=default_storage
+    ).ask()
+    
+    if not all([projeto, engenheiro, hardware, metodo_storage]):
+        typer.secho("❌ Ingresso cancelado.", fg="red")
+        raise typer.Exit()
+
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     unique_name = f"{name}_{timestamp}"
     dvc_dest = REGISTRY_PATH / "data" / f"{unique_name}.dvc"
     meta_dest = dvc_dest.with_suffix(".json")
 
-    typer.echo(f"📦 Preparando ingestão: {unique_name}")
+    typer.echo(f"\n📦 Preparando ingestão: {unique_name}")
     subprocess.run(["dvc", "add", str(source)], check=True)
     shutil.move(str(source.with_suffix(".dvc")), str(dvc_dest))
     
