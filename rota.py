@@ -16,9 +16,9 @@ REGISTRY_PATH = Path(__file__).parent.absolute()
 CONFIG_FILE = REGISTRY_PATH / "config.toml"
 
 DEFAULT_CONFIG = {
-    "projeto": "Nova Rota / ANTT",
+    "projeto": "Projeto-Base",
     "engenheiro": os.getlogin(),
-    "hardware_ingest": "ThinkStation-PX-A6000",
+    "hardware_ingest": "Workstation-Default",
     "metodo_storage": "DVC-SSH-MergerFS"
 }
 

@@ -54,4 +54,4 @@ else:
     st.info("Nenhum dataset registrado. Use o CLI `rota.py ingest` para adicionar dados.")
 
 st.markdown("---")
-st.caption("Mestrado Unipampa / Nova Rota do Oeste")
+st.caption("ROTA Data Registry - Dataset Management System")

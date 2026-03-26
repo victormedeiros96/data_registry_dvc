@@ -1,7 +1,7 @@
 Data Registry: Memorial Descritivo e Especificação Técnica
 
 ## 1. Introdução e Motivação
-No cenário de Visão Computacional aplicado a infraestrutura rodoviária (Mestrado Unipampa / Nova Rota do Oeste), o gerenciamento de datasets apresenta três desafios críticos:
+No cenário de Visão Computacional aplicado a infraestrutura de dados, o gerenciamento de datasets apresenta três desafios críticos:
 1.  **Volume e Escala:** Imagens de alta resolução e vídeos de inspeção superam rapidamente a capacidade de HDs individuais (limite de 12TB).
 2.  **Redundância Oculta:** Coletas em diferentes períodos no mesmo trecho geram imagens idênticas, que ocupam espaço desnecessário se não houver desduplicação.
 3.  **Rastreabilidade (Data Drift):** Modelos de Deep Learning (YOLOv11/PyTorch) são sensíveis a mudanças no dataset. É vital saber exatamente qual "snapshot" de dados treinou qual modelo.
@@ -29,7 +29,7 @@ Em ambientes de pesquisa e produção, o nome do dataset (ex: `trecho-norte`) é
 * **Motivação:** Garante **imutabilidade**. Nunca sobrescrevemos um dado. Se uma nova filtragem for feita no mesmo trecho, ela ganha um novo timestamp. Isso permite que a CLI funcione como um sistema de consulta temporal (Time-Travel).
 
 ### 2.4 Por que `uv` para Gestão de Ambiente?
-* **Motivação:** Como usuário de **Arch Linux**, a velocidade e a isolação são prioridades. O `uv` (escrito em Rust) resolve dependências em milissegundos e garante que a CLI `rota.py` tenha um ambiente reprodutível em qualquer workstation (ThinkStation PX ou servidores da Unipampa).
+* **Motivação:** A velocidade e a isolação são prioridades. O `uv` (escrito em Rust) resolve dependências em milissegundos e garante que a CLI `rota.py` tenha um ambiente reprodutível em qualquer workstation ou servidores de processamento.
 
 ### 2.5 Por que `config.toml` e CLI Interativa?
 * **Padrões de Trabalho:** O arquivo `config.toml` armazena configurações padrão da estação de trabalho (Engenheiro, Hardware, Projeto), evitando redigitação.
@@ -58,10 +58,10 @@ Cada dataset é acompanhado de um arquivo JSON para facilitar futuras integraç�
 ```json
 {
   "dataset_id": "nome-projeto_20260325_120000",
-  "projeto": "Nova Rota do Oeste / ANTT",
-  "engenheiro": "Victor Medeiros",
-  "origem_fisica": "/home/victor/inspecao/video01",
-  "hardware_ingest": "ThinkStation-PX-A6000",
+  "projeto": "Projeto-Rodoviario",
+  "engenheiro": "Responsavel-Tecnico",
+  "origem_fisica": "/caminho/origem/dados",
+  "hardware_ingest": "Workstation-01",
   "metodo_storage": "DVC-SSH-MergerFS"
 }
 ```
@@ -84,4 +84,4 @@ Cada dataset é acompanhado de um arquivo JSON para facilitar futuras integraç�
 ---
 
 ### Conclusão
-Este projeto transforma a "bagunça de arquivos" em um **Sistema de Gestão de Ativos de Dados** escalável, seguro e auditável, essencial para o sucesso do mestrado e para a governança de dados na Nova Rota do Oeste.
+Este projeto transforma a "bagunça de arquivos" em um **Sistema de Gestão de Ativos de Dados** escalável, seguro e auditável, essencial para a governança de dados e integridade de modelos de IA.
