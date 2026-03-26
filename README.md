@@ -4,9 +4,11 @@ Sistema inteligente de versionamento e gestão de datasets rodoviários para Mac
 
 ## Setup 🚀
 
-1.  **Sincronize o ambiente:** `uv sync`
-2.  **Configure o storage inicial:** `bash scripts/setup_storage.sh`
-3.  **Configuração Local:** Edite o arquivo `config.toml` gerado na primeira execução para definir seus padrões.
+1.  **Instalação Automática:** No Linux/MacOS, rode o script de inicialização que instala o `uv` e as dependências:
+    ```bash
+    bash setup.sh
+    ```
+2.  **Configuração Local:** Edite o arquivo `config.toml` (criado após o setup) para definir seus padrões.
 
 ## Uso da CLI 🛠️
 
