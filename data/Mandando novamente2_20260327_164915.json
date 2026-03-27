@@ -1,0 +1,8 @@
+{
+    "dataset_id": "Mandando novamente2_20260327_164915",
+    "projeto": "Nova Rota do Oeste / ANTT",
+    "engenheiro": "victor",
+    "origem_fisica": "/home/victor/classificacao5/Classificacao",
+    "hardware_ingest": "ThinkStation-PX-A6000",
+    "metodo_storage": "DVC-SSH-MergerFS"
+}
