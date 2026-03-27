@@ -80,12 +80,25 @@ def ingest(
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     unique_name = f"{name}_{timestamp}"
+    dataset_dest = REGISTRY_PATH / "data" / unique_name
     dvc_dest = REGISTRY_PATH / "data" / f"{unique_name}.dvc"
     meta_dest = dvc_dest.with_suffix(".json")
 
     typer.echo(f"\n📦 Preparando ingestão: {unique_name}")
-    subprocess.run(["dvc", "add", str(source)], check=True)
-    shutil.move(str(source.with_suffix(".dvc")), str(dvc_dest))
+    
+    # Usamos hardlinks (os.link) para que o processo seja instantâneo e não ocupe o dobro de espaço.
+    # Se estiverem em partições de disco diferentes e o hd recusar, recai para cópia clássica.
+    typer.echo(f"⚡ Criando Hardlinks do dataset para o registry (Processo instantâneo e Gasto Zero de espaço)...")
+    try:
+        shutil.copytree(str(source), str(dataset_dest), copy_function=os.link, dirs_exist_ok=True)
+    except OSError:
+        typer.echo("⚠️ Partições de HD diferentes detectadas. O processo recairá em cópia profunda (pode demorar)...")
+        if dataset_dest.exists():
+            shutil.rmtree(str(dataset_dest))
+        shutil.copytree(str(source), str(dataset_dest), dirs_exist_ok=True)
+    
+    # Agora sim, adicionamos com DVC o diretório interno
+    subprocess.run(["dvc", "add", str(dataset_dest)], check=True)
     
     metadata = {
         "dataset_id": unique_name,
@@ -142,7 +155,7 @@ def download(name_id: str, target: Path = typer.Argument(..., help="Destino do d
         return
     target.mkdir(parents=True, exist_ok=True)
     subprocess.run(["dvc", "get", str(REGISTRY_PATH), f"data/{name_id}", "-o", str(target)], check=True)
-    typer.success(f"✅ Dados em: {target}")
+    typer.secho(f"✅ Dados em: {target}", fg="green")
 
 @app.command()
 def verify():
@@ -179,7 +192,7 @@ def prefetch(
         except subprocess.CalledProcessError:
             typer.secho(f"❌ Falha ao baixar {name_id}.", fg="red")
             
-    typer.success("✨ Pre-fetch finalizado para treinamento de modelos!")
+    typer.secho("✨ Pre-fetch finalizado para treinamento de modelos!", fg="green")
 
 @app.command()
 def remove():
