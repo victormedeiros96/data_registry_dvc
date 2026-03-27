@@ -1,0 +1,8 @@
+{
+    "dataset_id": "classificacao_sinalizacao_horizontal_20260327_160859",
+    "projeto": "Teste Automatizado",
+    "engenheiro": "Victor",
+    "origem_fisica": "/home/victor/classificacao5/Classificacao",
+    "hardware_ingest": "Workstation-Local",
+    "metodo_storage": "DVC-SSH-MergerFS"
+}
