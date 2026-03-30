@@ -1,4 +1,0 @@
-[core]
-    remote = teste_remote
-['remote "teste_remote"']
-    url = ssh://servidor@192.168.18.253/home/servidor/DVC_DATA_TEST/

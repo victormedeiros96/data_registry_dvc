@@ -26,9 +26,8 @@ if data_dir.exists():
                     "Data/Hora": data.get("timestamp", meta_file.stem.split('_')[-2:] if '_' in meta_file.stem else ["N/A"])[0],
                     "Projeto": data.get("projeto", "N/A"),
                     "Engenheiro": data.get("engenheiro", data.get("user", "N/A")),
-                    "Origem": data.get("origem_fisica", data.get("original_path", "N/A")),
-                    "Hardware": data.get("hardware_ingest", "N/A"),
-                    "Storage": data.get("metodo_storage", "N/A"),
+                    "Storage / HD": data.get("dvc_remote", data.get("metodo_storage", "Padrão")),
+                    "Tags": ", ".join(data.get("tags", [])) if data.get("tags") else "Nenhuma"
                 })
         except Exception as e:
             st.error(f"Erro ao ler {meta_file.name}: {e}")

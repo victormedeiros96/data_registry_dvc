@@ -25,6 +25,9 @@ SSH_IP=${SSH_IP:-192.168.18.253}
 read -p "Digite o CAMINHO ABSOLUTO da pasta do Storage lá no servidor [ex: /home/servidor/DVC_DATA_TEST/]: " SSH_FOLDER
 SSH_FOLDER=${SSH_FOLDER:-/home/servidor/DVC_DATA_TEST/}
 
+read -p "Digite um Nome Curto para este HD/Servidor [ex: server1_hd1]: " REMOTE_NAME
+REMOTE_NAME=${REMOTE_NAME:-server1_hd1}
+
 echo ""
 echo -e "${YELLOW}>> Gerando/Verificando sua Chave de Segurança (SSH Key)...${NC}"
 if [ ! -f ~/.ssh/id_ed25519 ]; then
@@ -42,9 +45,17 @@ echo "--------------------------------------------------------"
 
 echo ""
 echo -e "${YELLOW}>> Configurando o ambiente DVC para usar esse Storage...${NC}"
-# Substitui e cria o controle do DVC apontando pra pasta requerida
-dvc remote add -d default_remote "ssh://${SSH_USER}@${SSH_IP}${SSH_FOLDER}" --force
-echo -e "${GREEN}Storage principal do DVC configurado em: ssh://${SSH_USER}@${SSH_IP}${SSH_FOLDER}!${NC}"
+# Cria o controle do DVC apontando pra pasta requerida
+dvc remote add "${REMOTE_NAME}" "ssh://${SSH_USER}@${SSH_IP}${SSH_FOLDER}" --force
+
+read -p "Deseja tornar este o Storage PADRÃO (default)? (s/n) [s]: " MAKE_DEFAULT
+MAKE_DEFAULT=${MAKE_DEFAULT:-s}
+if [ "$MAKE_DEFAULT" = "s" ]; then
+    dvc remote default "${REMOTE_NAME}"
+    echo -e "${GREEN}Storage '${REMOTE_NAME}' configurado como padrão em: ssh://${SSH_USER}@${SSH_IP}${SSH_FOLDER}!${NC}"
+else
+    echo -e "${GREEN}Storage '${REMOTE_NAME}' configurado em: ssh://${SSH_USER}@${SSH_IP}${SSH_FOLDER}!${NC}"
+fi
 
 echo ""
 echo -e "${CYAN}================================================================${NC}"
