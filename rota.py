@@ -70,6 +70,8 @@ def ingest(
     engenheiro: Optional[str] = typer.Option(None, help="Nome do engenheiro responsável"),
     hardware: Optional[str] = typer.Option(None, help="Hardware utilizado na ingestão"),
     metodo_storage: Optional[str] = typer.Option(None, help="Método de armazenamento"),
+    tags: Optional[str] = typer.Option(None, "--tags", help="Tags separadas por vírgula"),
+    remote: Optional[str] = typer.Option(None, "--remote", help="Nome do remote DVC de destino"),
     delete: bool = typer.Option(False, "--delete", help="Apaga a origem após o sucesso")
 ):
     """Indexa dados com timestamp, sobe para o SSH e registra no Git."""
@@ -101,8 +103,8 @@ def ingest(
         raise typer.Exit()
         
     remotes = get_dvc_remotes()
-    remote_name = None
-    if remotes:
+    remote_name = remote
+    if not remote_name and remotes:
         remote_choices = [_remote_label(k, v) for k, v in remotes.items()]
         typer.secho("\n💡 Dica: Use LOCAL ⚡ para upload rápido (mesma máquina). Use SSH 🌐 para acessar de outras máquinas.", fg="yellow")
         selected_remote = questionary.select(
@@ -114,9 +116,14 @@ def ingest(
              raise typer.Exit()
         # Extrai o nome real (primeira palavra antes dos espaços)
         remote_name = selected_remote.split("  [")[0].strip()
+        
+    tags_list = []
+    if tags:
+        tags_list = [t.strip() for t in tags.split(',')]
+    else:
+        tags_str = questionary.text("Adicione Tags (opcional, separe por vírgula, ex: noite, chuva):").ask()
+        tags_list = [t.strip() for t in tags_str.split(',')] if tags_str else []
 
-    tags_str = questionary.text("Adicione Tags (opcional, separe por vírgula, ex: noite, chuva):").ask()
-    tags_list = [t.strip() for t in tags_str.split(',')] if tags_str else []
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     unique_name = f"{name}_{timestamp}"

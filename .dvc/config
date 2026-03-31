@@ -1,5 +1,6 @@
 [core]
     remote = storage_da_140
+    autostage = true
 [cache]
     type = "reflink,hardlink"
     protected = true
