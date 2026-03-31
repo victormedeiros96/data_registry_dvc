@@ -1,0 +1,16 @@
+{
+    "dataset_id": "RDT1_PAVIMENTO_PANELA_REM_MASK_20260331_164912",
+    "projeto": "Projeto-Base",
+    "engenheiro": "rdt",
+    "origem_fisica": "/mnt/hd2/datasets/RDT1_linescan_panela_remendo3_mask",
+    "hardware_ingest": "Workstation-Default",
+    "metodo_storage": "DVC-Local",
+    "dvc_remote": "storage_da_140",
+    "tags": [
+        "RDT1",
+        "Linescan",
+        "Pavimento",
+        "Mask",
+        "2025-06"
+    ]
+}
