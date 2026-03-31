@@ -1,0 +1,16 @@
+{
+    "dataset_id": "RDT2_DEFENSA_AMASSADO_V3_20260331_170228",
+    "projeto": "Projeto-Base",
+    "engenheiro": "rdt",
+    "origem_fisica": "/mnt/hd2/datasets/amassado3_metal",
+    "hardware_ingest": "Workstation-Default",
+    "metodo_storage": "DVC-Local",
+    "dvc_remote": "storage_da_140",
+    "tags": [
+        "RDT2",
+        "Metal",
+        "Amassado",
+        "Patologia",
+        "2025-02"
+    ]
+}
