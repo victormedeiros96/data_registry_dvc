@@ -1,0 +1,9 @@
+[core]
+    remote = storage_da_140
+[cache]
+    type = "reflink,hardlink"
+    protected = true
+['remote "storage_da_140"']
+    url = ssh://rdt@192.168.18.140/mnt/Storage_DVC_SDA/
+['remote "storage_local_140"']
+    url = /mnt/Storage_DVC_SDA/

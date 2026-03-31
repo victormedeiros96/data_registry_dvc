@@ -18,7 +18,7 @@ if ! command -v uv &> /dev/null; then
     echo "📦 Instalando 'uv' (Astral)..."
     curl -LsSf https://astral.sh/uv/install.sh | sh
     # Adiciona ao PATH para a sessão atual
-    source $HOME/.cargo/env
+    source $HOME/.local/bin/env
 else
     echo "✅ 'uv' já está instalado."
 fi

@@ -54,6 +54,14 @@ def get_dvc_remotes():
     except subprocess.CalledProcessError:
         return {}
 
+def _remote_label(name: str, url: str) -> str:
+    """Retorna label formatado indicando [LOCAL ⚡] ou [SSH 🌐] para o remote."""
+    if url.startswith("ssh://"):
+        host = url.split("ssh://")[1].split("/")[0]
+        return f"{name}  [SSH 🌐  {host}]  — ideal para download por outras máquinas"
+    else:
+        return f"{name}  [LOCAL ⚡ {url}]  — upload direto, muito mais rápido"
+
 @app.command()
 def ingest(
     source: Path = typer.Argument(..., help="Pasta original do dataset"),
@@ -95,7 +103,8 @@ def ingest(
     remotes = get_dvc_remotes()
     remote_name = None
     if remotes:
-        remote_choices = [f"{k} \t({v})" for k, v in remotes.items()]
+        remote_choices = [_remote_label(k, v) for k, v in remotes.items()]
+        typer.secho("\n💡 Dica: Use LOCAL ⚡ para upload rápido (mesma máquina). Use SSH 🌐 para acessar de outras máquinas.", fg="yellow")
         selected_remote = questionary.select(
             "Selecione o Servidor/HD de destino (Remote do DVC):",
             choices=remote_choices
@@ -103,7 +112,8 @@ def ingest(
         if not selected_remote:
              typer.secho("❌ Ingresso cancelado (Nenhum storage selecionado).", fg="red")
              raise typer.Exit()
-        remote_name = selected_remote.split(" \t(")[0]
+        # Extrai o nome real (primeira palavra antes dos espaços)
+        remote_name = selected_remote.split("  [")[0].strip()
 
     tags_str = questionary.text("Adicione Tags (opcional, separe por vírgula, ex: noite, chuva):").ask()
     tags_list = [t.strip() for t in tags_str.split(',')] if tags_str else []
@@ -225,20 +235,20 @@ def list_storages():
         
     table = Table(title="🖥️  Servidores / HDs Conectados")
     table.add_column("Nome / Apelido", style="cyan", bold=True, no_wrap=True)
-    table.add_column("Caminho Servidor (SSH)", style="magenta")
+    table.add_column("Tipo", style="blue", no_wrap=True)
+    table.add_column("Caminho", style="magenta")
     table.add_column("Espaço Disponível", style="green")
     
-    typer.echo("🔍 Consultando espaço em disco na rede (SSH)...")
+    typer.echo("🔍 Consultando espaço em disco...")
     
     for name, url in remotes.items():
-        free_space = "N/A (Local/S3?)"
+        free_space = "N/A"
+        tipo = "SSH 🌐" if url.startswith("ssh://") else "LOCAL ⚡"
         if url.startswith("ssh://"):
             try:
                 parts = url[6:].split("/", 1)
                 host_part = parts[0]
                 path_part = "/" + (parts[1] if len(parts) > 1 else "")
-                
-                # Roda df -h no IP remoto com timeout
                 ssh_cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=5", host_part, f"df -h '{path_part}' | tail -n 1"]
                 res = subprocess.run(ssh_cmd, capture_output=True, text=True)
                 if res.returncode == 0 and res.stdout.strip():
@@ -250,8 +260,19 @@ def list_storages():
                     free_space = "Não alcançável"
             except Exception:
                 free_space = "Erro de conexão"
+        else:
+            # Local: usa df diretamente
+            try:
+                res = subprocess.run(["df", "-h", url], capture_output=True, text=True)
+                if res.returncode == 0:
+                    cols = res.stdout.strip().split('\n')[-1].split()
+                    if len(cols) >= 4:
+                        size, used, avail, pcent = cols[1], cols[2], cols[3], cols[4]
+                        free_space = f"{avail} Livres (Uso: {pcent} de {size})"
+            except Exception:
+                free_space = "Erro"
                 
-        table.add_row(name, url, free_space)
+        table.add_row(name, tipo, url, free_space)
         
     console.print(table)
 
