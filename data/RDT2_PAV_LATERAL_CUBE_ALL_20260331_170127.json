@@ -1,0 +1,16 @@
+{
+    "dataset_id": "RDT2_PAV_LATERAL_CUBE_ALL_20260331_170127",
+    "projeto": "Projeto-Base",
+    "engenheiro": "rdt",
+    "origem_fisica": "/mnt/hd2/datasets/pavimento_lateral_cube_all",
+    "hardware_ingest": "Workstation-Default",
+    "metodo_storage": "DVC-Local",
+    "dvc_remote": "storage_da_140",
+    "tags": [
+        "RDT2",
+        "Ladybug",
+        "Lateral",
+        "Cubo",
+        "2024-11"
+    ]
+}
