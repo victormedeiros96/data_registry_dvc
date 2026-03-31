@@ -5,7 +5,7 @@
     "origem_fisica": "/mnt/hd2/datasets/RDT2_360_defensas_mask_distance_filtrado_background",
     "hardware_ingest": "Workstation-Default",
     "metodo_storage": "DVC-Local",
-    "dvc_remote": "storage_local_140",
+    "dvc_remote": "storage_da_140",
     "tags": [
         "Ladybug5+",
         "360",
