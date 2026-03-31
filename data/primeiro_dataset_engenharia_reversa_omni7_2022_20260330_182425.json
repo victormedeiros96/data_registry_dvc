@@ -1,0 +1,10 @@
+{
+    "dataset_id": "primeiro_dataset_engenharia_reversa_omni7_2022_20260330_182425",
+    "projeto": "Projeto-Base",
+    "engenheiro": "rdt",
+    "origem_fisica": "/mnt/hd2/datasets/Primeiro_Dataset_Engenharia_Reversa_Omni7_2022",
+    "hardware_ingest": "Workstation-Default",
+    "metodo_storage": "DVC-SSH-MergerFS",
+    "dvc_remote": "storage_da_140",
+    "tags": ["Omni7", "ReverseEngineering"]
+}

@@ -548,7 +548,17 @@ def main(ctx: typer.Context):
             ctx.invoke(dashboard)
             
         elif action == "download":
-            name_id = questionary.text("ID do dataset para baixar:").ask()
+            files = list((REGISTRY_PATH / "data").glob("*.dvc"))
+            if not files:
+                typer.secho("❌ Nenhum dataset encontrado para baixar.", fg="red")
+                continue
+            
+            choices = [f.stem for f in sorted(files, reverse=True)]
+            name_id = questionary.select(
+                "Selecione o dataset para baixar:",
+                choices=choices
+            ).ask()
+            
             if not name_id: continue
             target = questionary.path("Destino do download:").ask()
             if not target: continue
