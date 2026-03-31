@@ -1,0 +1,16 @@
+{
+    "dataset_id": "RDT2_DEFENSA_PATOLOGIA_FISSURAS_20260331_170011",
+    "projeto": "Projeto-Base",
+    "engenheiro": "rdt",
+    "origem_fisica": "/mnt/hd2/datasets/fissuras_one",
+    "hardware_ingest": "Workstation-Default",
+    "metodo_storage": "DVC-Local",
+    "dvc_remote": "storage_da_140",
+    "tags": [
+        "RDT2",
+        "Concreto",
+        "Patologia",
+        "Fissuras",
+        "2025-04"
+    ]
+}
