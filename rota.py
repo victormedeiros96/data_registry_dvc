@@ -118,8 +118,7 @@ def ingest(
         # Extrai o nome real (primeira palavra antes dos espaços)
         remote_name = selected_remote.split("  [")[0].strip()
         
-    # Lógica inteligente para o push_remote
-    # Se escolhermos um SSH e tivermos um local para o mesmo path, usamos o local para o PUSH
+    # Lógica inteligente para o push_remote (sempre tenta detectar para performance)
     final_push_remote = push_remote or remote_name
     if not push_remote and remote_name in remotes:
         url = remotes[remote_name]
@@ -134,7 +133,7 @@ def ingest(
                     if not v.startswith("ssh://") and not v.startswith("s3://") and not v.startswith("gs://"):
                         local_path = v.rstrip("/")
                         if local_path == path_part.rstrip("/") or path_part.rstrip("/").endswith(local_path):
-                            typer.secho(f"🚀 Detetado remote local equivalente: '{k}' para o path '{v}'. Usando para PUSH ultra-rápido!", fg="green")
+                            typer.secho(f"🚀 Detectado remote local equivalente: '{k}' para o path '{v}'. Usando para PUSH ultra-rápido!", fg="green")
                             final_push_remote = k
                             break
             except Exception:

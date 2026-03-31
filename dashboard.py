@@ -9,7 +9,8 @@ st.title("🛣️ ROTA Data Registry - Gestão de Datasets")
 st.markdown("Interface para visualização dos datasets e pipelines versionados com DVC.")
 
 # Carregar metadados da pasta data
-data_dir = Path("data")
+ROOT_PATH = Path(__file__).parent.absolute()
+data_dir = ROOT_PATH / "data"
 datasets = []
 
 if data_dir.exists():
