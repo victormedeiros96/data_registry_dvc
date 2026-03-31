@@ -71,7 +71,8 @@ def ingest(
     hardware: Optional[str] = typer.Option(None, help="Hardware utilizado na ingestão"),
     metodo_storage: Optional[str] = typer.Option(None, help="Método de armazenamento"),
     tags: Optional[str] = typer.Option(None, "--tags", help="Tags separadas por vírgula"),
-    remote: Optional[str] = typer.Option(None, "--remote", help="Nome do remote DVC de destino"),
+    remote: Optional[str] = typer.Option(None, "--remote", help="Nome do remote DVC de destino (salvo nos metadados)"),
+    push_remote: Optional[str] = typer.Option(None, "--push-remote", help="Remote usado para o PUSH (pode ser diferente do oficial)"),
     delete: bool = typer.Option(False, "--delete", help="Apaga a origem após o sucesso")
 ):
     """Indexa dados com timestamp, sobe para o SSH e registra no Git."""
@@ -106,9 +107,9 @@ def ingest(
     remote_name = remote
     if not remote_name and remotes:
         remote_choices = [_remote_label(k, v) for k, v in remotes.items()]
-        typer.secho("\n💡 Dica: Use LOCAL ⚡ para upload rápido (mesma máquina). Use SSH 🌐 para acessar de outras máquinas.", fg="yellow")
+        typer.secho("\n💡 Dica: Sempre escolha o remote OFICIAL (SSH) para que outras máquinas possam baixar depois.\nO script tentará usar o caminho local se disponível para o push ser instantâneo.", fg="yellow")
         selected_remote = questionary.select(
-            "Selecione o Servidor/HD de destino (Remote do DVC):",
+            "Selecione o Servidor/HD de destino (Remote oficial do DVC):",
             choices=remote_choices
         ).ask()
         if not selected_remote:
@@ -117,13 +118,34 @@ def ingest(
         # Extrai o nome real (primeira palavra antes dos espaços)
         remote_name = selected_remote.split("  [")[0].strip()
         
+    # Lógica inteligente para o push_remote
+    # Se escolhermos um SSH e tivermos um local para o mesmo path, usamos o local para o PUSH
+    final_push_remote = push_remote or remote_name
+    if not push_remote and remote_name in remotes:
+        url = remotes[remote_name]
+        if url.startswith("ssh://"):
+            try:
+                # Extrai o path do SSH (formato: ssh://user@ip/path ou ssh://user@ip:/path)
+                path_part = url.split("/", 3)[-1]
+                if not path_part.startswith("/"): path_part = "/" + path_part
+                
+                # Procura por um remote local que aponte para esse mesmo path
+                for k, v in remotes.items():
+                    if not v.startswith("ssh://") and not v.startswith("s3://") and not v.startswith("gs://"):
+                        local_path = v.rstrip("/")
+                        if local_path == path_part.rstrip("/") or path_part.rstrip("/").endswith(local_path):
+                            typer.secho(f"🚀 Detetado remote local equivalente: '{k}' para o path '{v}'. Usando para PUSH ultra-rápido!", fg="green")
+                            final_push_remote = k
+                            break
+            except Exception:
+                pass
+
     tags_list = []
     if tags:
         tags_list = [t.strip() for t in tags.split(',')]
     else:
         tags_str = questionary.text("Adicione Tags (opcional, separe por vírgula, ex: noite, chuva):").ask()
         tags_list = [t.strip() for t in tags_str.split(',')] if tags_str else []
-
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     unique_name = f"{name}_{timestamp}"
@@ -160,11 +182,12 @@ def ingest(
     meta_dest.write_text(json.dumps(metadata, indent=4, ensure_ascii=False))
 
     os.chdir(REGISTRY_PATH)
-    typer.echo(f"🚀 Enviando para o Storage Central ({remote_name or 'padrao'})...")
-    if remote_name:
-        subprocess.run(["dvc", "push", "-r", remote_name, str(dvc_dest)], check=True)
+    typer.echo(f"🚀 Enviando para o Storage ({final_push_remote})...")
+    if final_push_remote:
+        subprocess.run(["dvc", "push", "-r", final_push_remote, str(dvc_dest)], check=True)
     else:
         subprocess.run(["dvc", "push", str(dvc_dest)], check=True)
+
     
     subprocess.run(["git", "add", str(dvc_dest), str(meta_dest)], check=True)
     subprocess.run(["git", "commit", "-m", f"feat: add dataset {unique_name}"], check=True)
