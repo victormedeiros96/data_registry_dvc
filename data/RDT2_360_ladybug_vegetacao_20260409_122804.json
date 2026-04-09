@@ -1,0 +1,15 @@
+{
+    "dataset_id": "RDT2_360_ladybug_vegetacao_20260409_122804",
+    "projeto": "Projeto-Base",
+    "engenheiro": "rdt",
+    "origem_fisica": "/media/rdt/hd3/backup_home/Pictures/dataset_vegetacao_cube_balanced",
+    "hardware_ingest": "Workstation-48",
+    "metodo_storage": "DVC-Local",
+    "dvc_remote": "storage_da_140",
+    "tags": [
+        "Ladybug5+",
+        "360",
+        "RDT2",
+        "Vegetacao"
+    ]
+}
