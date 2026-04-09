@@ -1,0 +1,15 @@
+{
+    "dataset_id": "RDT2_360_ladybug_meio_fio_drenagem_20260409_144850",
+    "projeto": "Projeto-Base",
+    "engenheiro": "rdt",
+    "origem_fisica": "/mnt/hd3/DrenangemSteferson/yolo_drenagem/RDT2_360_meio_fio_drenagem",
+    "hardware_ingest": "Workstation-px",
+    "metodo_storage": "DVC-Local",
+    "dvc_remote": "storage_da_140",
+    "tags": [
+        "Ladybug5+",
+        "360",
+        "RDT2",
+        "Drenagem"
+    ]
+}
