@@ -1,0 +1,15 @@
+{
+    "dataset_id": "RDT2_ladybug_360_Sinalizacao_Horizontal_20260409_151121",
+    "projeto": "Projeto-Base",
+    "engenheiro": "rdt",
+    "origem_fisica": "/mnt/New12TB/SinalizacaoHorizontal30-10-24/RDT2_ladybug_360_Sinalizacao_Horizontal",
+    "hardware_ingest": "Workstation-48",
+    "metodo_storage": "DVC-Local",
+    "dvc_remote": "storage_da_140",
+    "tags": [
+        "Ladybug5+",
+        "360",
+        "RDT2",
+        "Horizontal"
+    ]
+}
