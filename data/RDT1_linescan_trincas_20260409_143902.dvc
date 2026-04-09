@@ -1,0 +1,6 @@
+outs:
+- md5: dc01688c79afe6c1007df1c94d89084d.dir
+  size: 6537863874
+  nfiles: 12382
+  hash: md5
+  path: RDT1_linescan_trincas_20260409_143902

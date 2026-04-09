@@ -1,0 +1,14 @@
+{
+    "dataset_id": "RDT1_linescan_trincas_20260409_143902",
+    "projeto": "Projeto-Base",
+    "engenheiro": "rdt",
+    "origem_fisica": "/mnt/hd2/datasets/dataset_trincas_08_julho_2_classes_splited",
+    "hardware_ingest": "Workstation-px",
+    "metodo_storage": "DVC-Local",
+    "dvc_remote": "storage_da_140",
+    "tags": [
+        "Linescan",
+        "RDT1",
+        "Trincas"
+    ]
+}
