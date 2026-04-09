@@ -1,0 +1,15 @@
+{
+    "dataset_id": "RDT2_ladybug_360_Sarjeta_Drenagem_20260409_151550",
+    "projeto": "Projeto-Base",
+    "engenheiro": "rdt",
+    "origem_fisica": "/mnt/New12TB/Gaby_Sarjeta/Dataset_drenagem/RDT2_ladybug_360_sarjeta_drenagem",
+    "hardware_ingest": "Workstation-Victor",
+    "metodo_storage": "DVC-Local",
+    "dvc_remote": "storage_da_140",
+    "tags": [
+        "Ladybug5+",
+        "360",
+        "RDT2",
+        "Drenagem"
+    ]
+}
