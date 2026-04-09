@@ -1,0 +1,15 @@
+{
+    "dataset_id": "RDT2_ladybug_360_Horizontal_qualidade_20260409_171058",
+    "projeto": "Projeto-Base",
+    "engenheiro": "rdt",
+    "origem_fisica": "/mnt/arch/mnt/HD1/SINALIZACAO_HORIZONTAL/RDT2_ladybug_360_Horizontal_qualidade",
+    "hardware_ingest": "Workstation-px",
+    "metodo_storage": "DVC-Local",
+    "dvc_remote": "storage_da_140",
+    "tags": [
+        "Ladybug5+",
+        "360",
+        "RDT2",
+        "Horizontal"
+    ]
+}
