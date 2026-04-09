@@ -1,0 +1,16 @@
+{
+    "dataset_id": "RDT3_GOPRO_360_ladybug_placas_20260409_153002",
+    "projeto": "Projeto-Base",
+    "engenheiro": "rdt",
+    "origem_fisica": "/mnt/hd2/datasets/RDT3_GOPRO_360_ladybug_placas(dataset_join_placas_v2)",
+    "hardware_ingest": "Workstation-px",
+    "metodo_storage": "DVC-Local",
+    "dvc_remote": "storage_da_140",
+    "tags": [
+        "GOPRO",
+        "Ladybug5+",
+        "360",
+        "RDT3",
+        "Placas"
+    ]
+}
