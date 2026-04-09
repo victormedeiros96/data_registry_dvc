@@ -5,3 +5,4 @@ data/*
 !data/*.dvc
 !data/*.json
 config.toml
+sobe_dataset.sh
